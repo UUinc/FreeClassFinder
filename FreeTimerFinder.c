@@ -24,14 +24,15 @@ int main()
     int i=0, j=0, k=0;
     char className[30][50] = {"A1","A2","A3","A4","A5","B1","B2","B3","B4","B5","C1","C2","C3","C4","C5","D1","D2","D3","D4","D5","CC1","CC2","CC3","CC4","CC5","LSCE","LTOPO","LRDM","LR","CMDS"};
     FILE *file;
-    char path[200],ch;
+    char path[200],fileName[20]="/schedule.TXT",ch;
 
     //Initialize all class by their name
     for(i=0; i<30; i++)
         strcpy(class[i].name,className[i]);
 
     //Open File (schedule.TXT)
-    strcpy(path,"C:\\Users\\hp\\Desktop\\EMSI\\1AP\\S2\\9.Language de Programmation 2\\3.TP\\.other\\FreeClassFinder\\schedule.TXT");
+    printf("Path : "); gets(path);
+    strcat(path,fileName);
     
     file = fopen(path,"r");
 
