@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
+#include <stdbool.h>
 
 //Struct Declaration
 typedef struct Class Class;
@@ -19,6 +20,8 @@ void DisplayNames(int n,int Group);
 void DisplaySchedule(int n,int Group);
 void InitializeClassesSchedule();
 void SetTimeToClass(int n);
+bool IsItFree();
+int HourConverter(char hour[5]);
 
 //Global variables
 Class class[25];
@@ -97,8 +100,10 @@ int main()
         switch(Menu())
         {
             case 1: DisplaySchedule(N,0); break;
-            case 2: break;
-            case 0: exit = 1; printf("Chilli m3a rassk ^.^\n"); break;
+            case 2: if(IsItFree()) printf("\nThe Classroom is available");
+                    else printf("\nThe Classroom is not available");
+                break;
+            case 0: exit = 1; printf("\nChilli m3a rassk ^.^\n"); break;
         }
         getch();
         system("cls");//windows
@@ -114,7 +119,7 @@ int Menu()
 
     printf("Menu :\n\n");
     printf("1.Display Classes Schedule\n");
-    printf("2.second option\n");
+    printf("2.Is the Class Free\n");
     printf("0.Exit\n");
 
     do
@@ -191,4 +196,66 @@ void SetTimeToClass(int n)
                     {
                         strcpy(class[l].schedule[j][k],classGroup[i].name); break;
                     }
+}
+
+bool IsItFree()
+{
+    int i,j;
+    int day, hour, time, error;
+    char _class[10], h[5];
+
+    printf("\nClass ex : (A1, LCSE ...)\n\n");
+    error = 1;
+    do{
+        printf("Class : "); scanf("%s",_class);
+        for(i=0; i<25; i++)
+            if(strcmp(class[i].name,_class) == 0)
+            {
+                error = 0; break;
+            }
+        if(error)
+            printf("Class Not found! try again\n");
+    }while(error);
+
+    printf("1.Monday\n2.Tuesday\n3.Wednesday\n4.Thursday\n5.Friday\n6.Saturday\n\n");
+    do{printf("Day : "); error = scanf("%d",&day);}while(!error || day<1 || day>6);
+
+    printf("\nFrom 8:30 To 18:15 (15 min)\n\n");
+    do{printf("Hour : "); scanf("%s",h); hour = error = HourConverter(h);}while(error<0 || error>39);
+    printf("\n%s : %d",h,hour);
+
+    printf("\n\ntime frame (1 = 15 min)\nmin : 1 (15 min)\nmax : 24 (6 hours)\n\n");
+    do{printf("time : "); error = scanf("%d",&time);}while(!error || time<1 || time>24 || hour+time>39);
+
+    //Logic
+    printf("\nDebug i : %d",i);
+    for(j=hour; j<hour+time; j++)
+    {
+        printf("\nDebug room : %s",class[i].schedule[day][j]);
+        printf("\nDebug day : %d",day);
+        printf("\nDebug j : %d",j);
+        if(strcmp(class[i].schedule[day][j],"0") != 0)
+            return false;
+    }
+    return true;
+}
+
+int HourConverter(char hour[5])
+{
+    int h, min, r;
+
+    if(hour[1]==':')
+    {
+        h = hour[0]-'0';
+        min = (hour[2]-'0')*10 + (hour[3]-'0');
+    }
+    else if(hour[2]==':')
+    {
+        h = (hour[0]-'0')*10 + (hour[1]-'0');
+        min = (hour[3]-'0')*10 + (hour[4]-'0');
+    }
+
+    r = ((h*60+min) - 510) / 15;
+
+    return r;
 }
