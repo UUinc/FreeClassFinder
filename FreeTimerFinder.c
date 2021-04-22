@@ -9,7 +9,7 @@ typedef struct Class Class;
 struct Class 
 {
     char name[10];
-    int schedule[6][40];
+    char schedule[6][40][10];
 
 };
 
@@ -21,7 +21,7 @@ Class classGroup[17];
 
 int main()
 {
-    int i=0, j=0, k=0;
+    int i=0, j=0, k=0, l=0;
     char className[30][50] = {"A1","A2","A3","A4","A5","B1","B2","B3","B4","B5","C1","C2","C3","C4","C5","D1","D2","D3","D4","D5","CC1","CC2","CC3","CC4","CC5","LSCE","LTOPO","LRDM","LR","CMDS"};
     FILE *file;
     char path[200],fileName[20]="/schedule.TXT",ch;
@@ -57,21 +57,26 @@ int main()
             }
         }
         //Set time schedule
-        i=j=k=0;
+        i=j=k=l=0;
         while ((ch = fgetc(file)) != EOF)
         {
             if(ch == '\n' && j==6)
             {
-                i++; j=k=0;
+                i++; j=k=l=0;
             }
             else if(ch == '\n')
             {
-                j++; k=0;
+                j++; k=l=0;
+            }
+            else if(ch == ' ')
+            {
+                classGroup[i].schedule[j][k][l] = '\0';
+                l=0; k++;
             }
             else
             {
-                classGroup[i].schedule[j][k] = ch-'0';
-                k++;
+                classGroup[i].schedule[j][k][l] = ch;
+                l++;
             }
         }
     }
@@ -89,7 +94,7 @@ int main()
         for(j=0; j<6; j++)
         {
             for(k=0; k<40; k++)
-                printf("%d ",classGroup[i].schedule[j][k]);
+                printf("%s ",classGroup[i].schedule[j][k]);
             printf("\n");
         }
     }
