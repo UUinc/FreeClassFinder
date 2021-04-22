@@ -14,6 +14,7 @@ struct Class
 };
 
 //Function Declaration
+int Menu();
 void DisplayNames(int n,int Group);
 void DisplaySchedule(int n,int Group);
 void InitializeClassesSchedule();
@@ -25,7 +26,7 @@ Class classGroup[50];
 
 int main()
 {
-    int i=0, j=0, k=0, l=0, N;
+    int i=0, j=0, k=0, l=0, N, exit=0;
     char className[25][50] = {"A1","A2","A5","B2","B3","B4","B5","C2","C3","C4","C5","D2","D4","D5","CC1","CC2","CC3","CC4","CC5","LCSE","LAI","ST","LEPE","LTSE","LR"};
     FILE *file;
     char path[200],fileName[20]="/schedule.TXT",ch;
@@ -91,21 +92,50 @@ int main()
 
     SetTimeToClass(N);
 
-    DisplayNames(N,0);
-    DisplayNames(N,1);   
-
-    DisplaySchedule(N,0);
-    DisplaySchedule(N,1);
-
-    getch();
+    while (!exit)
+    {
+        switch(Menu())
+        {
+            case 1: DisplaySchedule(N,0); break;
+            case 2: break;
+            case 0: exit = 1; printf("Chilli m3a rassk ^.^\n"); break;
+        }
+        getch();
+        system("cls");//windows
+        //system("clear");//linux
+    }
+    
     return 0;
 }
+//Display a Menu
+int Menu()
+{
+    int choice, error;
+
+    printf("Menu :\n\n");
+    printf("1.Display Classes Schedule\n");
+    printf("2.second option\n");
+    printf("0.Exit\n");
+
+    do
+    { 
+        printf("\nChoice : ");
+        fflush(stdin);
+        error = !scanf("%d",&choice);
+        error = error || choice > 2 || choice < 0 ? 1 : 0;
+        if(error)
+            printf("choice incorrect!\ntry again\n");
+    } while (error);
+    
+    return choice;
+}
+
 //display name (group = 0) show classes only (group != 0) show classes group
 void DisplayNames(int n,int Group)
 {
     int i,j,k;
 
-    if(Group)
+    if(!Group)
         for(i=0; i<25; i++)
             printf("%s\n",class[i].name);
     else
@@ -116,7 +146,7 @@ void DisplaySchedule(int n,int Group)
 {
     int i,j,k;
 
-    if(Group)
+    if(!Group)
         for(i=0; i<25; i++)
         {
             printf("\n----------Schedule : %s---------------\n",class[i].name);
