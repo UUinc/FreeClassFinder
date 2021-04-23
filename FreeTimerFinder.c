@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <conio.h>
-#include <stdbool.h>
 
 //Struct Declaration
 typedef struct Class Class;
@@ -20,8 +19,10 @@ void DisplayNames(int n,int Group);
 void DisplaySchedule(int n,int Group);
 void InitializeClassesSchedule();
 void SetTimeToClass(int n);
-bool IsItFree();
+void IsItFree();
 int HourConverter(char hour[5]);
+int FreeClassroom(int classID, int day, int hour, int time);
+void FreeClassrooms();
 
 //Global variables
 Class class[25];
@@ -100,9 +101,8 @@ int main()
         switch(Menu())
         {
             case 1: DisplaySchedule(N,0); break;
-            case 2: if(IsItFree()) printf("\nThe Classroom is available");
-                    else printf("\nThe Classroom is not available");
-                break;
+            case 2: IsItFree(); break;
+            case 3: FreeClassrooms(); break;
             case 0: exit = 1; printf("\nChilli m3a rassk ^.^\n"); break;
         }
         getch();
@@ -120,6 +120,7 @@ int Menu()
     printf("Menu :\n\n");
     printf("1.Display Classes Schedule\n");
     printf("2.Is the Class Free\n");
+    printf("3.Free Classrooms\n");
     printf("0.Exit\n");
 
     do
@@ -127,7 +128,7 @@ int Menu()
         printf("\nChoice : ");
         fflush(stdin);
         error = !scanf("%d",&choice);
-        error = error || choice > 2 || choice < 0 ? 1 : 0;
+        error = error || choice > 3 || choice < 0 ? 1 : 0;
         if(error)
             printf("choice incorrect!\ntry again\n");
     } while (error);
@@ -198,7 +199,7 @@ void SetTimeToClass(int n)
                     }
 }
 
-bool IsItFree()
+void IsItFree()
 {
     int i,j;
     int day, hour, time, error;
@@ -226,16 +227,14 @@ bool IsItFree()
     printf("\n\ntime frame (1 = 15 min)\nmin : 1 (15 min)\nmax : 24 (6 hours)\n\n");
     do{printf("time : "); error = scanf("%d",&time);}while(!error || time<1 || time>24 || hour+time>39);
 
-    //Logic
-    for(j=hour; j<hour+time; j++)
+    int r = FreeClassroom(i,day,hour,time);
+    if(r)
     {
-        if(strcmp(class[i].schedule[day][j],"0") != 0)
-        {
-            printf("\nClass Group : %s\n",class[i].schedule[day][j]);
-            return false;
-        }
+        printf("\n----Classroom isn't Available!-----\n");
+        printf("\n-Class : %s\n",class[i].schedule[day][r]);
     }
-    return true;
+    else
+        printf("\n----Classroom is Available!----\n");
 }
 
 int HourConverter(char hour[5])
@@ -256,4 +255,36 @@ int HourConverter(char hour[5])
     r = ((h*60+min) - 510) / 15;
 
     return r;
+}
+
+int FreeClassroom(int classID, int day, int hour, int time)
+{
+    for(int j=hour; j<hour+time; j++)
+        if(strcmp(class[classID].schedule[day][j],"0") != 0)
+            return j;
+    return 0;
+}
+
+void FreeClassrooms()
+{
+    int i,j;
+    int day, hour, time, error;
+    char h[5];
+
+    printf("1.Monday\n2.Tuesday\n3.Wednesday\n4.Thursday\n5.Friday\n6.Saturday\n\n");
+    do{printf("Day : "); error = scanf("%d",&day);}while(!error || day<1 || day>6); day--;
+
+    printf("\nFrom 8:30 To 18:15 (15 min)\n\n");
+    do{printf("Hour : "); scanf("%s",h); hour = error = HourConverter(h);}while(error<0 || error>39);
+
+    printf("\n\ntime frame (1 = 15 min)\nmin : 1 (15 min)\nmax : 24 (6 hours)\n\n");
+    do{printf("time : "); error = scanf("%d",&time);}while(!error || time<1 || time>24 || hour+time>39);
+
+    printf("-----Availables :-----\n");
+
+    for(i=0; i<25; i++)
+    {
+        if(!FreeClassroom(i,day,hour,time))
+            printf("  -%s\n",class[i].name);
+    }
 }
