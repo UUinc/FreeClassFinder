@@ -218,24 +218,22 @@ bool IsItFree()
     }while(error);
 
     printf("1.Monday\n2.Tuesday\n3.Wednesday\n4.Thursday\n5.Friday\n6.Saturday\n\n");
-    do{printf("Day : "); error = scanf("%d",&day);}while(!error || day<1 || day>6);
+    do{printf("Day : "); error = scanf("%d",&day);}while(!error || day<1 || day>6); day--;
 
     printf("\nFrom 8:30 To 18:15 (15 min)\n\n");
     do{printf("Hour : "); scanf("%s",h); hour = error = HourConverter(h);}while(error<0 || error>39);
-    printf("\n%s : %d",h,hour);
 
     printf("\n\ntime frame (1 = 15 min)\nmin : 1 (15 min)\nmax : 24 (6 hours)\n\n");
     do{printf("time : "); error = scanf("%d",&time);}while(!error || time<1 || time>24 || hour+time>39);
 
     //Logic
-    printf("\nDebug i : %d",i);
     for(j=hour; j<hour+time; j++)
     {
-        printf("\nDebug room : %s",class[i].schedule[day][j]);
-        printf("\nDebug day : %d",day);
-        printf("\nDebug j : %d",j);
         if(strcmp(class[i].schedule[day][j],"0") != 0)
+        {
+            printf("\nClass Group : %s\n",class[i].schedule[day][j]);
             return false;
+        }
     }
     return true;
 }
