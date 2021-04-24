@@ -36,7 +36,7 @@ int main()
     char path[200],fileName[20]="/schedule.TXT",ch;
 
     //Initialize all class by their name
-    for(i=0; i<30; i++)
+    for(i=0; i<25; i++)
         strcpy(class[i].name,className[i]);
 
     //Open File (schedule.TXT)
