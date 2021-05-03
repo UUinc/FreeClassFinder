@@ -31,7 +31,7 @@ Class classGroup[50];
 int main()
 {
     int i=0, j=0, k=0, l=0, N, exit=0;
-    char className[25][50] = {"A1","A2","A5","B2","B3","B4","B5","C2","C3","C4","C5","D2","D4","D5","CC1","CC2","CC3","CC4","CC5","LCSE","LAI","ST","LEPE","LTSE","LR"};
+    char className[25][50] = {"A1","A2","B1","B2","B3","B4","B5","C1","C2","C3","C4","C5","D2","D4","CC1","CC2","CC3","CC4","CC5","LCSE","LAI","LRDM","CMDS","LTOPO","LR"};
     FILE *file;
     char path[200],fileName[20]="/schedule.TXT",ch;
 
